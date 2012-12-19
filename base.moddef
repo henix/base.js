@@ -1,0 +1,39 @@
+dir Base base.js {
+	dir ecma5 ecma5 {
+		Object-keys:
+
+		String-trim:
+
+		Array-filter:
+		Array-map:
+		Array-indexOf:
+	}
+	dir Assert assert {
+		fail:
+
+		# boolean
+		isTrue:
+		isTrue -> fail
+		isFalse:
+		isFalse -> fail
+
+		# null
+		present:
+		present -> fail
+		notPresent:
+		notPresent -> fail
+
+		# number
+		equals:
+		equals -> fail
+		between:
+		between -> fail
+
+		# string
+		equalsIgnoreCase:
+		equalsIgnoreCase -> fail
+		notEmpty:
+		notEmpty -> fail
+	}
+	Precond: precond.js
+}
