@@ -26,7 +26,7 @@ if (!Object.keys) {
 			for (var prop in obj) {
 				if (hasOwnProperty.call(obj, prop)) result.push(prop);
 			}
- 
+
 			if (hasDontEnumBug) {
 				for (var i=0; i < dontEnumsLength; i++) {
 					if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);

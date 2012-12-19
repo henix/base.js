@@ -8,37 +8,37 @@
 if ( !Array.prototype.forEach ) {
 	Array.prototype.forEach = function( callback, thisArg ) {
 		var T, k;
- 
+
 		if ( this === null ) {
 			throw new TypeError( "this is null or not defined" );
 		}
- 
+
 		// 1. Let O be the result of calling ToObject passing the |this| value as the argument.
 		var O = Object(this);
- 
+
 		// 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
 		// 3. Let len be ToUint32(lenValue).
 		var len = O.length >>> 0; // Hack to convert O.length to a UInt32
- 
+
 		// 4. If IsCallable(callback) is false, throw a TypeError exception.
 		// See: http://es5.github.com/#x9.11
 		if ( {}.toString.call(callback) != "[object Function]" ) {
 			throw new TypeError( callback + " is not a function" );
 		}
- 
+
 		// 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
 		if ( thisArg ) {
 			T = thisArg;
 		}
- 
+
 		// 6. Let k be 0
 		k = 0;
- 
+
 		// 7. Repeat, while k < len
 		while( k < len ) {
- 
+
 			var kValue;
- 
+
 			// a. Let Pk be ToString(k).
 			//   This is implicit for LHS operands of the in operator
 			// b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.

@@ -74,5 +74,5 @@ if (!Array.prototype.map) {
 
 		// 9. return A
 		return A;
-	};      
+	};
 }

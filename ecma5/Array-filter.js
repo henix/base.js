@@ -6,15 +6,15 @@
 if (!Array.prototype.filter) {
 	Array.prototype.filter = function(fun /*, thisp */) {
 		"use strict";
- 
+
 		if (this === null)
 			throw new TypeError();
- 
+
 		var t = Object(this);
 		var len = t.length >>> 0;
 		if (typeof fun != "function")
 			throw new TypeError();
- 
+
 		var res = [];
 		var thisp = arguments[1];
 		for (var i = 0; i < len; i++) {

@@ -1,4 +1,160 @@
 /**
+ * like IllegalArgumentException
+ * Indicates some user input is bad
+ */
+function ArgumentError(message) {
+	this.name = 'ArgumentError';
+	this.message = message;
+}
+ArgumentError.prototype = new Error();
+ArgumentError.prototype.constructor = ArgumentError;
+
+Precond = {
+	fail: function(msg) {
+		throw new ArgumentError(msg);
+	},
+	check: function(cond, msg) {
+		if (!cond) {
+			this.fail(msg);
+		}
+	}
+};
+function AssertError(msg) {
+	this.name = 'AssertError';
+	this.message = msg;
+}
+AssertError.prototype = new Error();
+AssertError.prototype.constructor = AssertError;
+
+Assert = {
+	fail: function(msg) {
+		throw new AssertError(msg);
+	}
+};
+Assert.equals = function(actuall, expected, msg) {
+	if (actuall != expected) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail(actuall + ' != ' + expected + ' (expected)' + msg);
+	}
+};
+Assert.between = function(actuall, start, end, msg) {
+	if ((actuall < start) || (actuall > end)) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail(actuall + ' is not between [' + start + ',' + end + ']' + msg);
+	}
+};
+Assert.notPresent = function(obj, msg) {
+	if ((typeof obj !== 'undefined') && (obj !== null)) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail('object is present' + msg);
+	}
+};
+Assert.present = function(obj, msg) {
+	if ((typeof obj === 'undefined') || (obj === null)) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail('object null or undefined' + msg);
+	}
+};
+Assert.isTrue = function(cond, msg) {
+	if (cond !== true) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail('condition ' + cond + ' is not true' + msg);
+	}
+};
+Assert.isFalse = function(cond, msg) {
+	if (cond !== false) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail('condition ' + cond + ' is not false' + msg);
+	}
+};
+Assert.notEmpty = function(str, msg) {
+	if (str.length === 0) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail('string is empty' + msg);
+	}
+};
+Assert.equalsIgnoreCase = function(actuall, expected, msg) {
+	if (actuall.toLowerCase() !== expected.toLowerCase()) {
+		msg = msg ? ': ' + msg : '';
+		Assert.fail(actuall + ' !=(ignore case) ' + expected + ' (expected)' + msg);
+	}
+};
+/**
+ * Object.keys
+ *
+ * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/keys
+ */
+if (!Object.keys) {
+	Object.keys = (function () {
+		var hasOwnProperty = Object.prototype.hasOwnProperty,
+        hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+        dontEnums = [
+			'toString',
+			'toLocaleString',
+			'valueOf',
+			'hasOwnProperty',
+			'isPrototypeOf',
+			'propertyIsEnumerable',
+			'constructor'
+        ],
+        dontEnumsLength = dontEnums.length;
+
+		return function (obj) {
+			if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
+
+			var result = [];
+
+			for (var prop in obj) {
+				if (hasOwnProperty.call(obj, prop)) result.push(prop);
+			}
+
+			if (hasDontEnumBug) {
+				for (var i=0; i < dontEnumsLength; i++) {
+					if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
+				}
+			}
+			return result;
+		};
+	})();
+}
+/**
+ * Array.indexOf
+ *
+ * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
+ */
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+		"use strict";
+		if (this === null) {
+			throw new TypeError();
+		}
+		var t = Object(this);
+		var len = t.length >>> 0;
+		if (len === 0) {
+			return -1;
+		}
+		var n = 0;
+		if (arguments.length > 0) {
+			n = Number(arguments[1]);
+			if (n != n) { // shortcut for verifying if it's NaN
+				n = 0;
+			} else if (n !== 0 && n != Infinity && n != -Infinity) {
+				n = (n > 0 || -1) * Math.floor(Math.abs(n));
+			}
+		}
+		if (n >= len) {
+			return -1;
+		}
+		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+		for (; k < len; k++) {
+			if (k in t && t[k] === searchElement) {
+				return k;
+			}
+		}
+		return -1;
+	};
+}
+/**
  * Array.map
  *
  * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/map
@@ -74,111 +230,6 @@ if (!Array.prototype.map) {
 
 		// 9. return A
 		return A;
-	};      
-}
-/**
- * Array.indexOf
- *
- * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
- */
-if (!Array.prototype.indexOf) {
-	Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-		"use strict";
-		if (this === null) {
-			throw new TypeError();
-		}
-		var t = Object(this);
-		var len = t.length >>> 0;
-		if (len === 0) {
-			return -1;
-		}
-		var n = 0;
-		if (arguments.length > 0) {
-			n = Number(arguments[1]);
-			if (n != n) { // shortcut for verifying if it's NaN
-				n = 0;
-			} else if (n !== 0 && n != Infinity && n != -Infinity) {
-				n = (n > 0 || -1) * Math.floor(Math.abs(n));
-			}
-		}
-		if (n >= len) {
-			return -1;
-		}
-		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
-		for (; k < len; k++) {
-			if (k in t && t[k] === searchElement) {
-				return k;
-			}
-		}
-		return -1;
-	};
-}
-/**
- * Object.keys
- *
- * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/keys
- */
-if (!Object.keys) {
-	Object.keys = (function () {
-		var hasOwnProperty = Object.prototype.hasOwnProperty,
-        hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
-        dontEnums = [
-			'toString',
-			'toLocaleString',
-			'valueOf',
-			'hasOwnProperty',
-			'isPrototypeOf',
-			'propertyIsEnumerable',
-			'constructor'
-        ],
-        dontEnumsLength = dontEnums.length;
-
-		return function (obj) {
-			if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null) throw new TypeError('Object.keys called on non-object');
-
-			var result = [];
-
-			for (var prop in obj) {
-				if (hasOwnProperty.call(obj, prop)) result.push(prop);
-			}
- 
-			if (hasDontEnumBug) {
-				for (var i=0; i < dontEnumsLength; i++) {
-					if (hasOwnProperty.call(obj, dontEnums[i])) result.push(dontEnums[i]);
-				}
-			}
-			return result;
-		};
-	})();
-}
-/**
- * Array.filter
- *
- * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/filter
- */
-if (!Array.prototype.filter) {
-	Array.prototype.filter = function(fun /*, thisp */) {
-		"use strict";
- 
-		if (this === null)
-			throw new TypeError();
- 
-		var t = Object(this);
-		var len = t.length >>> 0;
-		if (typeof fun != "function")
-			throw new TypeError();
- 
-		var res = [];
-		var thisp = arguments[1];
-		for (var i = 0; i < len; i++) {
-			if (i in t) {
-				var val = t[i]; // in case fun mutates this
-				if (fun.call(thisp, val, i, t))
-					res.push(val);
-			}
-		}
-
-		return res;
 	};
 }
 /**
@@ -192,83 +243,32 @@ if(!String.prototype.trim) {
 	};
 }
 /**
- * like IllegalArgumentException
- * Indicates some user input is bad
+ * Array.filter
+ *
+ * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/filter
  */
-function ArgumentError(message) {
-	this.name = 'ArgumentError';
-	this.message = message;
-}
-ArgumentError.prototype = new Error();
-ArgumentError.prototype.constructor = ArgumentError;
+if (!Array.prototype.filter) {
+	Array.prototype.filter = function(fun /*, thisp */) {
+		"use strict";
 
-Precond = {
-	fail: function(msg) {
-		throw new ArgumentError(msg);
-	},
-	check: function(cond, msg) {
-		if (!cond) {
-			this.fail(msg);
+		if (this === null)
+			throw new TypeError();
+
+		var t = Object(this);
+		var len = t.length >>> 0;
+		if (typeof fun != "function")
+			throw new TypeError();
+
+		var res = [];
+		var thisp = arguments[1];
+		for (var i = 0; i < len; i++) {
+			if (i in t) {
+				var val = t[i]; // in case fun mutates this
+				if (fun.call(thisp, val, i, t))
+					res.push(val);
+			}
 		}
-	}
-};
-function AssertError(msg) {
-	this.name = 'AssertError';
-	this.message = msg;
-}
-AssertError.prototype = new Error();
-AssertError.prototype.constructor = AssertError;
 
-Assert = {
-	fail: function(msg) {
-		throw new AssertError(msg);
-	}
-};
-Assert.notPresent = function(obj, msg) {
-	if ((typeof obj !== 'undefined') && (obj !== null)) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail('object is present' + msg);
-	}
-};
-Assert.notEmpty = function(str, msg) {
-	if (str.length === 0) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail('string is empty' + msg);
-	}
-};
-Assert.between = function(actuall, start, end, msg) {
-	if ((actuall < start) || (actuall > end)) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail(actuall + ' is not between [' + start + ',' + end + ']' + msg);
-	}
-};
-Assert.present = function(obj, msg) {
-	if ((typeof obj === 'undefined') || (obj === null)) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail('object null or undefined' + msg);
-	}
-};
-Assert.equalsIgnoreCase = function(actuall, expected, msg) {
-	if (actuall.toLowerCase() !== expected.toLowerCase()) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail(actuall + ' !=(ignore case) ' + expected + ' (expected)' + msg);
-	}
-};
-Assert.equals = function(actuall, expected, msg) {
-	if (actuall != expected) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail(actuall + ' != ' + expected + ' (expected)' + msg);
-	}
-};
-Assert.isFalse = function(cond, msg) {
-	if (cond !== false) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail('condition ' + cond + ' is not false' + msg);
-	}
-};
-Assert.isTrue = function(cond, msg) {
-	if (cond !== true) {
-		msg = msg ? ': ' + msg : '';
-		Assert.fail('condition ' + cond + ' is not true' + msg);
-	}
-};
+		return res;
+	};
+}
