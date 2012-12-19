@@ -6,7 +6,7 @@ Some base utils for javascript:
 * Assert
 * Precond
 
-For details, see base.moddef
+For details, see [base.moddef](https://github.com/henix/base.js/blob/master/base.moddef)
 
 ## ecma5
 
@@ -48,3 +48,15 @@ So, `Assert` will add detail information to the error message, suitable for debu
 ## Build
 
 Build tool is [rainy](https://github.com/henix/rainy)
+
+Build:
+
+```bash
+RAINY_PATH=~/rainy make
+```
+
+If you don't want to type "RAINY_PATH=" every time, create a file `config.mk`:
+
+```makefile
+RAINY_PATH=/where/you/install/rainy
+```
