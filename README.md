@@ -58,5 +58,6 @@ RAINY_PATH=~/rainy make
 If you don't want to type "RAINY_PATH=" every time, create a file `config.mk`:
 
 ```makefile
+# you'd better use absolute path
 RAINY_PATH=/where/you/install/rainy
 ```

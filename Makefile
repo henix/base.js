@@ -2,9 +2,11 @@
 
 .PHONY: clean
 
-dist/base.js: base.js base.moddef
+NAME=base
+
+dist/$(NAME).js: $(NAME).js $(NAME).moddef
 	mkdir -p dist
-	$(RAINY_PATH)/rain --moddef base.moddef --incpath ".." $< > $@
+	"$(RAINY_PATH)/rain" --moddef $(NAME).moddef --incpath ".." $< > $@
 
 clean:
-	rm dist/base.js
+	rm dist/$(NAME).js
