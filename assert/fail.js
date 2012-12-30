@@ -1,9 +1,9 @@
 function AssertError(msg) {
-	this.name = 'AssertError';
 	this.message = msg;
 }
 AssertError.prototype = new Error();
 AssertError.prototype.constructor = AssertError;
+AssertError.prototype.name = 'AssertError';
 
 Assert = {
 	fail: function(msg) {
