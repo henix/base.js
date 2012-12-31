@@ -9,7 +9,7 @@ function ArgumentError(message) {
 ArgumentError.prototype = new Error();
 ArgumentError.prototype.constructor = ArgumentError;
 
-Precond = {
+var Precond = {
 	fail: function(msg) {
 		throw new ArgumentError(msg);
 	},

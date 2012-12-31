@@ -5,7 +5,7 @@ AssertError.prototype = new Error();
 AssertError.prototype.constructor = AssertError;
 AssertError.prototype.name = 'AssertError';
 
-Assert = {
+var Assert = {
 	fail: function(msg) {
 		throw new AssertError(msg);
 	}
