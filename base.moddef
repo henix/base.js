@@ -35,5 +35,13 @@ dir Base base.js {
 		notEmpty:
 		notEmpty -> fail
 	}
+	dir Strings strings {
+		*before_all: before_all.js
+		startsWith:
+		endsWith:
+		removeEnd:
+		removeEnd -> endsWith
+		escapeHtml:
+	}
 	Precond: precond.js
 }

@@ -3,7 +3,7 @@
 .PHONY: clean
 
 NAME=base
-SRC=$(wildcard *.js) $(wildcard assert/*.js) $(wildcard ecma5/*.js)
+SRC=$(wildcard *.js) $(wildcard assert/*.js) $(wildcard ecma5/*.js) $(wildcard strings/*.js)
 
 dist/$(NAME).js: $(NAME).js $(NAME).moddef $(SRC)
 	mkdir -p dist

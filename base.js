@@ -5,6 +5,7 @@
 var Base = {
 	Assert: Assert,
 	AssertError: AssertError,
+	Strings: Strings,
 	Precond: Precond,
 	ArgumentError: ArgumentError
 };
@@ -20,6 +21,7 @@ if (typeof exports !== 'undefined') {
 } else {
 	window.Assert = Assert;
 	window.AssertError = AssertError;
+	window.Strings = Strings;
 	window.Precond = Precond;
 	window.ArgumentError = ArgumentError;
 }
